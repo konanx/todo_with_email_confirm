@@ -1,3 +1,5 @@
+import { GetAccountsList, ProbaZalogowania } from "./apka/Logowanie";
+
 const { LoginAttemptFromClientSide } = require("./app/interfaces.ts");
 const redis = require("redis");
 const origins = {
@@ -6,7 +8,7 @@ const origins = {
   origins: "localhost:*",
 };
 const io = require("socket.io")(10005, origins);
-const redisClient = redis.createClient({
+export const redisClient = redis.createClient({
   socket: {
     host: "192.168.31.109",
     port: 6379,
@@ -20,3 +22,4 @@ io.on("connection", (socket: any) => {
     console.log("aeqweqwa");
   });
 });
+ProbaZalogowania({ login: "1", password: "password" });
