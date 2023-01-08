@@ -5,7 +5,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Logowanie from "./components/Logowanie/Logowanie";
 import { SocketContext } from "./components/contexts/Main";
 import io from "socket.io-client";
-
+import Rejestracja from "./components/Logowanie/Rejestracja";
+import RouteNotFound from "./components/RouteNotFound";
 const SERVER = "http://127.0.0.1:10005/";
 const router = createBrowserRouter([
   {
@@ -13,6 +14,8 @@ const router = createBrowserRouter([
     element: <Root />,
   },
   { path: "/logowanie", element: <Logowanie /> },
+  { path: "/rejestracja", element: <Rejestracja /> },
+  { path: "*", element: <RouteNotFound /> },
 ]);
 
 function App() {
@@ -23,7 +26,7 @@ function App() {
   return (
     <div className="App">
       <SocketContext.Provider value={[socket]}>
-        <RouterProvider router={router} />
+        <RouterProvider router={router} errorElement={<Logowanie />} />
       </SocketContext.Provider>
     </div>
   );
