@@ -18,8 +18,7 @@ redisClient.connect();
 
 io.on("connection", (socket: any) => {
   console.log("aa");
-  socket.on("loginAttempt", (data: typeof LoginAttemptFromClientSide) => {
-    console.log("aeqweqwa");
+  socket.on("loginAttempt", async (data: typeof LoginAttemptFromClientSide) => {
+    ProbaZalogowania({ login: "1", password: "password" });
   });
 });
-ProbaZalogowania({ login: "1", password: "password" });
