@@ -8,7 +8,7 @@ export const ProbaZalogowania = async (data: LoginAttemptIE) => {
 };
 // POBIERA LISTE WSZYSTKICH KONT
 export const GetAccountsList = async () => {
-  return new Promise<any>(async (resolve, reject) => {
+  return new Promise<any>(async function (resolve, reject) {
     let lista_kont: any = await redisClient.get("accountsList");
     resolve(lista_kont);
   });
