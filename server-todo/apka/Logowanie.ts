@@ -1,15 +1,18 @@
-import { LoginAttemptIE } from "./LogowanieInterfaces";
+import {
+  loginAttemptIE,
+  registerAccountConfirmIE,
+} from "./LogowanieInterfaces";
 import { redisClient } from "../index";
 import { SendEmail } from "./EmailSender/EmailSender";
-import { kod_bezpieczenstwa } from "./Converter";
+import { generator_custom_linkow, kod_bezpieczenstwa } from "./Converter";
 import { Socket } from "socket.io";
 // FUNKCJA WYWOLYWANA W MOMENCIE KLIKNIECIA PRZYCISKU ZALOGUJ PRZEZ UZYTKOWNIKA
-export const ProbaZalogowania = async (data: LoginAttemptIE) => {
+export const ProbaZalogowania = async (data: loginAttemptIE) => {
   const { login, password } = data;
   let accounts_list: string[] = await GetAccountsList();
   accounts_list.forEach((account) => {});
 };
-export const Rejestracja = async (data: LoginAttemptIE) => {
+export const Rejestracja = async (data: loginAttemptIE) => {
   return new Promise<any>(async function (resolve, reject) {
     const { login, password } = data;
     let accounts_list: string[] = await GetAccountsList();
@@ -36,9 +39,26 @@ export const Rejestracja = async (data: LoginAttemptIE) => {
     let email = await SendEmail({
       to: login,
       subject: "Rejestracja w serisie AnithToDo",
-      text: `Witamy w AnithToDo Twój kod do bezpiecznego logowania: ${kod}, kod jest ważny 5 minut.,`,
+      html: `<h2>Witamy w AnithToDo</h2><br /> <h3>Twój kod do bezpiecznego logowania: <b>${kod}</b>, kod jest ważny 5 minut.</h3>`,
     });
     resolve("ok");
+  });
+};
+
+export const RejestracjaConfirm = async (data: registerAccountConfirmIE) => {
+  let {email, code } = data
+  return new Promise<any>(async function (resolve, reject) {
+    let redis_name = "account_wait_to_confirm".concat(":",email )
+    let raw_dane_konta = await redisClient.get("account_wait_to_confirm");
+    // JEZELI TOKEN STRACIL WAZNOSC TO WYSYLAMY ALERT NA FRONT
+    if(!raw_dane_konta) {
+      resolve("expired")
+      return;
+    }
+    let dane_konta = JSON.parse(raw_dane_konta)
+    if(dane_konta.code )
+    
+
   });
 };
 
