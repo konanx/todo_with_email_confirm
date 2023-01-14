@@ -1,9 +1,12 @@
+import { base64_to_string, string_to_base64 } from "./apka/Converter";
 import { SendEmail } from "./apka/EmailSender/EmailSender";
 import {
   GetAccountsList,
   ProbaZalogowania,
   Rejestracja,
+  RejestracjaConfirm,
 } from "./apka/Logowanie";
+import { registerAccountConfirmIE } from "./apka/LogowanieInterfaces";
 
 const { LoginAttemptFromClientSide } = require("./app/interfaces.ts");
 const redis = require("redis");
@@ -30,8 +33,16 @@ io.on("connection", (socket: any) => {
     "registerAttempt",
     async (data: typeof LoginAttemptFromClientSide) => {
       let rej = await Rejestracja(data);
-      console.log("end");
-      socket.emit("registerAttemptResponse", data.login);
+      socket.emit("registerAttemptResponse", string_to_base64(data.login));
+    }
+  );
+  socket.on(
+    "registerAccountConfirm",
+    async (data: registerAccountConfirmIE) => {
+      // ZAMIANA EMAILA Z BASE64 NA STRING
+      data.email = base64_to_string(data.email);
+      let status = await RejestracjaConfirm(data);
+      console.log(status);
     }
   );
 });

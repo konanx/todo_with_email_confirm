@@ -25,7 +25,7 @@ export default function Menu() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             ToDo
           </Typography>
-          <Link to={`logowanie`} style={{ textDecoration: "none" }}>
+          <Link to={`login`} style={{ textDecoration: "none" }}>
             <Button style={{ textDecoration: "none" }}>Panel zadań</Button>
           </Link>
         </Toolbar>

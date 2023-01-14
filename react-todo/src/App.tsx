@@ -7,14 +7,16 @@ import { SocketContext } from "./components/contexts/Main";
 import io from "socket.io-client";
 import Rejestracja from "./components/Logowanie/Rejestracja";
 import RouteNotFound from "./components/RouteNotFound";
+import RejestracjaConfirm from "./components/Logowanie/RejestracjaConfirm";
 const SERVER = "http://127.0.0.1:10005/";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
   },
-  { path: "/logowanie", element: <Logowanie /> },
-  { path: "/rejestracja", element: <Rejestracja /> },
+  { path: "/login", element: <Logowanie /> },
+  { path: "/register", element: <Rejestracja /> },
+  { path: "/accountConfirm/:base64", element: <RejestracjaConfirm /> },
   { path: "*", element: <RouteNotFound /> },
 ]);
 

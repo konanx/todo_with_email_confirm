@@ -15,12 +15,12 @@ var transporter = nodemailer.createTransport({
 
 export const SendEmail = async (data: mailOptionsIE) => {
   return new Promise(async function (resolve, reject) {
-    const { subject, text } = data;
+    const { subject, html } = data;
     let mailOptions = {
       from: "hubei1@onet.pl",
       to: "micha112@onet.pl",
       subject,
-      text,
+      html,
     };
     await transporter.sendMail(mailOptions, function (error: any, info: any) {
       if (error) {

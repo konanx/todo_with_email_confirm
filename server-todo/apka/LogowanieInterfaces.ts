@@ -1,5 +1,8 @@
-export interface LoginAttemptIE {
+export interface loginAttemptIE {
   login: string;
   password: string;
 }
-export interface Login
+export interface registerAccountConfirmIE {
+  email: string;
+  code: string;
+}

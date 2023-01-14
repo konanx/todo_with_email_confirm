@@ -60,7 +60,7 @@ function Logowanie() {
               }
             />
           </FormControl>
-          <Link to="/rejestracja">
+          <Link to="/register">
             <Typography
               variant="caption"
               sx={{ mt: 1, textDecoration: "none", color: "white" }}
