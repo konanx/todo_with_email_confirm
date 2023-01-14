@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Box, TextField, Button, Typography } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { SocketContext } from "../contexts/Main";
+import { useNavigate } from "react-router-dom";
 function Rejestracja() {
-  const [login, setLogin] = useState<string>("");
+  const navigate = useNavigate();
+  const [socket] = useContext(SocketContext);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [password2, setPassword2] = useState<string>("");
+  useEffect(() => {
+    if (socket) {
+      socket.on("registerAttemptResponse", (email: string) => {
+        console.log("ASADDSAADSADSADSADS");
+        navigate(`/potwierdz/:${email}`);
+      });
+    }
+  }, [socket]);
   return (
     <Box
       sx={{
@@ -23,16 +34,6 @@ function Rejestracja() {
         <Typography sx={{ textAlign: "center" }} variant="h6">
           REJESTRACJA
         </Typography>
-        <TextField
-          autoComplete="off"
-          type="login"
-          id="outlined-basic"
-          label="Login"
-          variant="outlined"
-          value={login}
-          onChange={(e) => setLogin(e.target.value)}
-          required
-        />
         <TextField
           type="email"
           id="outlined-basic"
@@ -64,7 +65,9 @@ function Rejestracja() {
           sx={{ mt: 1 }}
           variant="contained"
           endIcon={<SendIcon />}
-          //   onClick={}
+          onClick={() =>
+            socket.emit("registerAttempt", { login: email, password })
+          }
         >
           Stwórz konto
         </Button>
