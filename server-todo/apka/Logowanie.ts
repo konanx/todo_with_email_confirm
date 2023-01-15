@@ -1,6 +1,7 @@
 import {
   loginAttemptIE,
   registerAccountConfirmIE,
+  registerConfirmSetexIE,
 } from "./LogowanieInterfaces";
 import { redisClient } from "../index";
 import { SendEmail } from "./EmailSender/EmailSender";
@@ -21,11 +22,11 @@ export const Rejestracja = async (data: loginAttemptIE) => {
     accounts_list.forEach((account) => {});
 
     // TWORZENIE 6 CYFROWEGO KODU
-    let kod = kod_bezpieczenstwa();
+    let code = kod_bezpieczenstwa();
     // ZAPISYWANIE KODU BEZPIECZENSTWA I HASLA DO REDISA
     let setex_name = "account_wait_to_confirm".concat(":", login);
-    let json_expire = {
-      kod,
+    let json_expire: registerConfirmSetexIE = {
+      code,
       login,
       password,
     };
@@ -39,26 +40,30 @@ export const Rejestracja = async (data: loginAttemptIE) => {
     let email = await SendEmail({
       to: login,
       subject: "Rejestracja w serisie AnithToDo",
-      html: `<h2>Witamy w AnithToDo</h2><br /> <h3>Twój kod do bezpiecznego logowania: <b>${kod}</b>, kod jest ważny 5 minut.</h3>`,
+      html: `<h2>Witamy w AnithToDo</h2><br /> <h3>Twój kod do bezpiecznego logowania: <b>${code}</b>, kod jest ważny 5 minut.</h3>`,
     });
     resolve("ok");
   });
 };
 
 export const RejestracjaConfirm = async (data: registerAccountConfirmIE) => {
-  let {email, code } = data
+  let { email, code } = data;
   return new Promise<any>(async function (resolve, reject) {
-    let redis_name = "account_wait_to_confirm".concat(":",email )
+    let redis_name = "account_wait_to_confirm".concat(":", email);
     let raw_dane_konta = await redisClient.get("account_wait_to_confirm");
     // JEZELI TOKEN STRACIL WAZNOSC TO WYSYLAMY ALERT NA FRONT
-    if(!raw_dane_konta) {
-      resolve("expired")
+    if (!raw_dane_konta) {
+      resolve("expired");
       return;
     }
-    let dane_konta = JSON.parse(raw_dane_konta)
-    if(dane_konta.code )
-    
-
+    let dane_konta: registerConfirmSetexIE = JSON.parse(raw_dane_konta);
+    if (dane_konta.code !== code) {
+      resolve("error_bad_code");
+      return;
+    }
+    // PO DOBRYM WPISANIU KODU
+    let transaction = redisClient.multi().lPush("accountsList");
+    resolve("success");
   });
 };
 
