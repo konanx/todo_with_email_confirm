@@ -63,6 +63,7 @@ export const RejestracjaConfirm = async (data: registerAccountConfirmIE) => {
     }
     // PO DOBRYM WPISANIU KODU
     let transaction = redisClient.multi().lPush("accountsList");
+    console.log(transaction);
     resolve("success");
   });
 };
