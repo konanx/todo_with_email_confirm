@@ -8,13 +8,17 @@ import io from "socket.io-client";
 import Rejestracja from "./components/Logowanie/Rejestracja";
 import RouteNotFound from "./components/RouteNotFound";
 import RejestracjaConfirm from "./components/Logowanie/RejestracjaConfirm";
+import SnackAlert from "./SnackAlert";
 const SERVER = "http://127.0.0.1:10005/";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
   },
-  { path: "/login", element: <Logowanie /> },
+  {
+    path: "/login",
+    element: <Logowanie />,
+  },
   { path: "/register", element: <Rejestracja /> },
   { path: "/accountConfirm/:base64", element: <RejestracjaConfirm /> },
   { path: "*", element: <RouteNotFound /> },
@@ -29,6 +33,7 @@ function App() {
     <div className="App">
       <SocketContext.Provider value={[socket]}>
         <RouterProvider router={router} errorElement={<Logowanie />} />
+        <SnackAlert />
       </SocketContext.Provider>
     </div>
   );

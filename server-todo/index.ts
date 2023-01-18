@@ -43,6 +43,9 @@ io.on("connection", (socket: any) => {
       data.email = base64_to_string(data.email);
       let status = await RejestracjaConfirm(data);
       console.log(status);
+      if (status.error) {
+        socket.emit("registerAccountSnackbar");
+      }
     }
   );
 });

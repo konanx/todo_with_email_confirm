@@ -49,25 +49,37 @@ export const Rejestracja = async (data: loginAttemptIE) => {
 export const RejestracjaConfirm = async (data: registerAccountConfirmIE) => {
   let { email, code } = data;
   return new Promise<any>(async function (resolve, reject) {
-    let redis_name = "account_wait_to_confirm".concat(":", email);
-    let raw_dane_konta = await redisClient.get("account_wait_to_confirm");
+    let redis_confirm_name = "account_wait_to_confirm".concat(":", email);
+    let raw_dane_konta = await redisClient.get(redis_confirm_name);
     // JEZELI TOKEN STRACIL WAZNOSC TO WYSYLAMY ALERT NA FRONT
     if (!raw_dane_konta) {
-      resolve("expired");
+      resolve({ error: true, text: "Kod bezpieczeństwa wygasł" });
       return;
     }
     let dane_konta: registerConfirmSetexIE = JSON.parse(raw_dane_konta);
     if (dane_konta.code !== code) {
-      resolve("error_bad_code");
+      resolve({ error: true, text: "Nieprawidłowy kod bezpieczeństwa" });
       return;
     }
     // PO DOBRYM WPISANIU KODU
-    let transaction = redisClient.multi().lPush("accountsList");
+    let current_id = await redisClient.incrBy("account_current_id", 1);
+    let gotowe_konto = JSON.stringify({
+      login: dane_konta.login,
+      password: dane_konta.password,
+      id: current_id,
+    });
+
+    let redis_name = "account".concat(":" + current_id);
+    let transaction = await redisClient
+      .multi()
+      .lPush("accountsList", redis_name)
+      .set(redis_name, gotowe_konto)
+      .del(redis_confirm_name)
+      .exec();
     console.log(transaction);
-    resolve("success");
+    resolve({ error: false, text: "Prawidłowy kod, konto stworzone" });
   });
 };
-// dasdas
 // POBIERA LISTE WSZYSTKICH KONT
 export const GetAccountsList = async () => {
   return new Promise<any>(async function (resolve, reject) {
