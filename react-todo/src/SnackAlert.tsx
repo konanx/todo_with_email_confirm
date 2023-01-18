@@ -1,20 +1,22 @@
-import React from "react";
-import { Snackbar, Alert } from "@mui/material";
+import * as React from "react";
+import Button from "@mui/material/Button";
+import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
 
-function SnackAlert() {
-  return (
-    <>
-      <Snackbar open={true} autoHideDuration={3000}>
-        <Alert
-          severity="success"
-          anchorOrigin={"top-left"}
-          onClose={() => alert("dsa")}
-        >
-          TEST
-        </Alert>
-      </Snackbar>
-    </>
-  );
+function MyApp() {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleClickVariant = (variant: VariantType) => () => {
+    // variant could be success, error, warning, info, or default
+    enqueueSnackbar("This is a success message!", { variant });
+  };
+
+  return <React.Fragment></React.Fragment>;
 }
 
-export default SnackAlert;
+export default function SnackAlert() {
+  return (
+    <SnackbarProvider maxSnack={3}>
+      <MyApp />
+    </SnackbarProvider>
+  );
+}
