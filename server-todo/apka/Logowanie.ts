@@ -83,7 +83,7 @@ export const RejestracjaConfirm = async (data: registerAccountConfirmIE) => {
 // POBIERA LISTE WSZYSTKICH KONT
 export const GetAccountsList = async () => {
   return new Promise<any>(async function (resolve, reject) {
-    let lista_kont: any = (await redisClient.get("accountsList")) || [];
+    let lista_kont: any = await redisClient.lRange("accountsList", 0, -1);
 
     resolve(lista_kont);
   });
