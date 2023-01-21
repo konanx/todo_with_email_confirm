@@ -25,7 +25,6 @@ export const redisClient = redis.createClient({
 redisClient.connect();
 
 io.on("connection", (socket: any) => {
-  console.log("aa");
   socket.on("loginAttempt", async (data: typeof LoginAttemptFromClientSide) => {
     ProbaZalogowania({ login: "1", password: "password" });
   });
