@@ -5,7 +5,11 @@ import {
 } from "./LogowanieInterfaces";
 import { redisClient } from "../index";
 import { SendEmail } from "./EmailSender/EmailSender";
-import { generator_custom_linkow, kod_bezpieczenstwa } from "./Converter";
+import {
+  generator_custom_linkow,
+  kod_bezpieczenstwa,
+  string_to_base64,
+} from "./Converter";
 import { Socket } from "socket.io";
 // FUNKCJA WYWOLYWANA W MOMENCIE KLIKNIECIA PRZYCISKU ZALOGUJ PRZEZ UZYTKOWNIKA
 export const ProbaZalogowania = async (data: loginAttemptIE) => {
@@ -19,7 +23,15 @@ export const Rejestracja = async (data: loginAttemptIE) => {
     let accounts_list: string[] = await GetAccountsList();
     // DO ZROBIENIA SPRAWDZENIE CZY EMAIL ISTNIEJ JUZ W BAZIE
     // JEZELI TAK TO TRZEBA WYRZUCIC ALERT NA FRONTA
-    accounts_list.forEach((account) => {});
+    let redis_base64_sprawdz_konto = "account".concat(
+      ":",
+      string_to_base64(login)
+    );
+    let isEmailExist = await redisClient.get(redis_base64_sprawdz_konto);
+    if (isEmailExist) {
+      resolve({ type: "ACCOUNT_EXIST", error: "BŁĄD! Konto już istnieje" });
+      return;
+    }
 
     // TWORZENIE 6 CYFROWEGO KODU
     let code = kod_bezpieczenstwa();
@@ -69,7 +81,7 @@ export const RejestracjaConfirm = async (data: registerAccountConfirmIE) => {
       id: current_id,
     });
 
-    let redis_name = "account".concat(":" + current_id);
+    let redis_name = "account".concat(":" + string_to_base64(email));
     let transaction = await redisClient
       .multi()
       .lPush("accountsList", redis_name)

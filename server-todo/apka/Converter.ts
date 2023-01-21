@@ -1,3 +1,10 @@
+const moment = require("moment");
+
+export const log = (message: string) => {
+  const date = new Date();
+  console.log(moment(date).format("DD-MM-YYYY HH:mm:ss") + ": " + message);
+};
+
 export const kod_bezpieczenstwa = () => {
   let kod = "";
   for (let i = 0; i < 6; i++) {

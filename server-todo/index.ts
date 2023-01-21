@@ -1,4 +1,4 @@
-import { base64_to_string, string_to_base64 } from "./apka/Converter";
+import { base64_to_string, log, string_to_base64 } from "./apka/Converter";
 import { SendEmail } from "./apka/EmailSender/EmailSender";
 import {
   GetAccountsList,
@@ -25,6 +25,7 @@ export const redisClient = redis.createClient({
 redisClient.connect();
 
 io.on("connection", (socket: any) => {
+  log("SOCKET CLIENT CONNECTED");
   socket.on("loginAttempt", async (data: typeof LoginAttemptFromClientSide) => {
     ProbaZalogowania({ login: "1", password: "password" });
   });
@@ -32,6 +33,11 @@ io.on("connection", (socket: any) => {
     "registerAttempt",
     async (data: typeof LoginAttemptFromClientSide) => {
       let rej = await Rejestracja(data);
+      // JEŻELI KONTO ISTNIEJE
+      if (rej.error) {
+        log(rej.error);
+        return;
+      }
       socket.emit("registerAttemptResponse", string_to_base64(data.login));
     }
   );
@@ -47,4 +53,9 @@ io.on("connection", (socket: any) => {
       }
     }
   );
+
+  // WYSWIETLA ALERT NA FRONCIE
+  const SnackAlert = (text: string, variant: Va) => {
+    socket.emit();
+  };
 });
