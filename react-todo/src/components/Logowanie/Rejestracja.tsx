@@ -11,6 +11,15 @@ function Rejestracja() {
   const [password, setPassword] = useState<string>("");
   const [password2, setPassword2] = useState<string>("");
   const [innerPasswordError, setInnerPasswordError] = useState<boolean>(false);
+
+  const PrzeslijFormularz = () => {
+    if (password != password2) return;
+    socket.emit("registerAttempt", {
+      login: email,
+      password: md5(password),
+    });
+  };
+
   useEffect(() => {
     if (socket) {
       socket.on("registerAttemptResponse", (base64: string) => {
@@ -34,11 +43,7 @@ function Rejestracja() {
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (password != password2) return;
-          socket.emit("registerAttempt", {
-            login: email,
-            password: md5(password),
-          });
+          PrzeslijFormularz();
         }}
       >
         <Typography sx={{ textAlign: "center" }} variant="h6">
@@ -63,6 +68,11 @@ function Rejestracja() {
           required
           // error={password.length < 4 || password.length > 16}
           inputProps={{ minLength: 4, maxLength: 16 }}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              PrzeslijFormularz();
+            }
+          }}
         />
         <TextField
           id="outlined-basic"
@@ -73,6 +83,11 @@ function Rejestracja() {
           onChange={(e) => setPassword2(e.target.value)}
           error={password != password2}
           required
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              PrzeslijFormularz();
+            }
+          }}
         />
         <Button
           type="submit"

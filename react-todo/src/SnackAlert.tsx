@@ -1,4 +1,4 @@
-import react, { useContext } from "react";
+import react, { useContext, useEffect } from "react";
 import Button from "@mui/material/Button";
 import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
 import { SocketContext } from "./components/contexts/Main";
@@ -7,11 +7,18 @@ function MyApp() {
   const [socket] = useContext(SocketContext);
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleClickVariant = (variant: VariantType) => () => {
+  const handleClickVariant = (message: string, variant: VariantType) => () => {
     // variant could be success, error, warning, info, or default
-    enqueueSnackbar("This is a success message!", { variant });
+    enqueueSnackbar(message, { variant });
   };
 
+  useEffect(() => {
+    if (socket) {
+      socket.on("SnackAlert", (data: any) => {
+        enqueueSnackbar(data.message, data.variant);
+      });
+    }
+  }, [socket]);
   return <></>;
 }
 
