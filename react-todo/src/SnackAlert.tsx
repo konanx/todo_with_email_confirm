@@ -15,7 +15,8 @@ function MyApp() {
   useEffect(() => {
     if (socket) {
       socket.on("SnackAlert", (data: any) => {
-        enqueueSnackbar(data.message, data.variant);
+        console.log(data.variant);
+        enqueueSnackbar(data.message, { variant: data.variant });
       });
     }
   }, [socket]);
@@ -24,7 +25,7 @@ function MyApp() {
 
 export default function SnackAlert() {
   return (
-    <SnackbarProvider maxSnack={3}>
+    <SnackbarProvider maxSnack={7}>
       <MyApp />
     </SnackbarProvider>
   );

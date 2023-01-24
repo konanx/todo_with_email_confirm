@@ -1,4 +1,6 @@
+import { VariantType } from "notistack";
 import { base64_to_string, log, string_to_base64 } from "./apka/Converter";
+// const {VariantType} = require("notistack")
 import { SendEmail } from "./apka/EmailSender/EmailSender";
 import {
   GetAccountsList,
@@ -36,8 +38,10 @@ io.on("connection", (socket: any) => {
       // JEŻELI KONTO ISTNIEJE
       if (rej.error) {
         log(rej.error);
+        SnackAlert(rej.error, "error");
         return;
       }
+      SnackAlert("Wysłano powiadomienie e-mail!", "success");
       socket.emit("registerAttemptResponse", string_to_base64(data.login));
     }
   );
@@ -46,16 +50,18 @@ io.on("connection", (socket: any) => {
     async (data: registerAccountConfirmIE) => {
       // ZAMIANA EMAILA Z BASE64 NA STRING
       data.email = base64_to_string(data.email);
-      let status = await RejestracjaConfirm(data);
-      console.log(status);
-      if (status.error) {
-        socket.emit("registerAccountSnackbar");
+      let rej = await RejestracjaConfirm(data);
+      if (rej.error) {
+        log(rej.error);
+        SnackAlert(rej.error, "error");
+        return;
       }
+      SnackAlert(rej.text, "success");
     }
   );
 
   // WYSWIETLA ALERT NA FRONCIE
-  const SnackAlert = (text: string, variant: Va) => {
-    socket.emit();
+  const SnackAlert = (text: string, variant: VariantType) => {
+    socket.emit("SnackAlert", { message: text, variant });
   };
 });

@@ -65,12 +65,12 @@ export const RejestracjaConfirm = async (data: registerAccountConfirmIE) => {
     let raw_dane_konta = await redisClient.get(redis_confirm_name);
     // JEZELI TOKEN STRACIL WAZNOSC TO WYSYLAMY ALERT NA FRONT
     if (!raw_dane_konta) {
-      resolve({ error: true, text: "Kod bezpieczeństwa wygasł" });
+      resolve({ error: "Kod bezpieczeństwa wygasł" });
       return;
     }
     let dane_konta: registerConfirmSetexIE = JSON.parse(raw_dane_konta);
     if (dane_konta.code !== code) {
-      resolve({ error: true, text: "Nieprawidłowy kod bezpieczeństwa" });
+      resolve({ error: "Nieprawidłowy kod bezpieczeństwa" });
       return;
     }
     // PO DOBRYM WPISANIU KODU
@@ -88,8 +88,7 @@ export const RejestracjaConfirm = async (data: registerAccountConfirmIE) => {
       .set(redis_name, gotowe_konto)
       .del(redis_confirm_name)
       .exec();
-    console.log(transaction);
-    resolve({ error: false, text: "Prawidłowy kod, konto stworzone" });
+    resolve({ text: "Prawidłowy kod, konto stworzone" });
   });
 };
 // POBIERA LISTE WSZYSTKICH KONT

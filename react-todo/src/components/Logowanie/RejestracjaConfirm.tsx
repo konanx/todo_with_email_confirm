@@ -1,12 +1,16 @@
 import React, { useRef, useContext, useEffect } from "react";
 import { SocketContext } from "../contexts/Main";
 import { Box, TextField, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 function RejestracjaConfirm() {
+  const navigate = useNavigate();
   const [socket] = useContext<any>(SocketContext);
   const id = useParams();
   useEffect(() => {
     if (socket) {
+      socket.on("registerAccountConfirm", (data: any) => {
+        navigate("/login");
+      });
     }
   }, [socket]);
   return (
