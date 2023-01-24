@@ -57,6 +57,7 @@ io.on("connection", (socket: any) => {
         return;
       }
       SnackAlert(rej.text, "success");
+      socket.emit("registerAccountConfirm");
     }
   );
 
