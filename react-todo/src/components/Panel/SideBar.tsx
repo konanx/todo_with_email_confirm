@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Box,
   Button,
@@ -11,7 +11,18 @@ import MailIcon from "@mui/icons-material/Mail";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { SocketContext } from "../contexts/Main";
 function SideBar() {
+  const [listyTodo, setListyTodo] = useState([]);
+  const [socket] = useContext(SocketContext);
+  useEffect(() => {
+    if (socket) {
+      socket.emit("pobierzListyTodo");
+      socket.on("pobierzListyTodoResponse", (listy: any) => {
+        setListyTodo(listy);
+      });
+    }
+  }, [socket]);
   return (
     <Box
       sx={{
@@ -24,20 +35,15 @@ function SideBar() {
         gap: 1,
       }}
     >
-      <Paper
-        elevation={2}
-        role="btn"
-        sx={{ backgroundColor: "grey.900", p: 1 }}
-      >
-        <Typography variant="subtitle2">TEST</Typography>
-      </Paper>
-      <Paper
-        elevation={2}
-        role="btn"
-        sx={{ backgroundColor: "grey.900", p: 1 }}
-      >
-        <Typography variant="subtitle2">TEST</Typography>
-      </Paper>
+      {listyTodo.map((item, index) => (
+        <Paper
+          elevation={2}
+          role="btn"
+          sx={{ backgroundColor: "grey.900", p: 1 }}
+        >
+          <Typography variant="subtitle2">TEST</Typography>
+        </Paper>
+      ))}
       <Box sx={{ flexGrow: 1 }}></Box>
       <Box sx={{ display: "flex" }}>
         <TextField label="Dodaj nową tablicę" size="small" />
