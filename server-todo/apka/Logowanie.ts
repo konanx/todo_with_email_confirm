@@ -11,11 +11,25 @@ import {
   string_to_base64,
 } from "./Converter";
 import { Socket } from "socket.io";
+import md5 from "md5";
 // FUNKCJA WYWOLYWANA W MOMENCIE KLIKNIECIA PRZYCISKU ZALOGUJ PRZEZ UZYTKOWNIKA
 export const ProbaZalogowania = async (data: loginAttemptIE) => {
-  const { login, password } = data;
-  let accounts_list: string[] = await GetAccountsList();
-  accounts_list.forEach((account) => {});
+  return new Promise<any>(async function (resolve, reject) {
+    const { login, password } = data;
+    let redis_name = "account".concat(":" + string_to_base64(login));
+    let account = JSON.parse(await redisClient.get(redis_name));
+    // konto nie istnieje
+    if (!account) {
+      resolve({ error: "Podany email nie jest przypisany do żadnego konta" });
+      return;
+    }
+    if (password != account.password) {
+      resolve({ error: "Nieprawidłowe hasło" });
+      return;
+    }
+    resolve(account);
+    return;
+  });
 };
 export const Rejestracja = async (data: loginAttemptIE) => {
   return new Promise<any>(async function (resolve, reject) {
@@ -95,7 +109,7 @@ export const RejestracjaConfirm = async (data: registerAccountConfirmIE) => {
 export const GetAccountsList = async () => {
   return new Promise<any>(async function (resolve, reject) {
     let lista_kont: any = await redisClient.lRange("accountsList", 0, -1);
-
+    console.log(lista_kont);
     resolve(lista_kont);
   });
 };

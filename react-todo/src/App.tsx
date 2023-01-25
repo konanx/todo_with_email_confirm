@@ -9,6 +9,7 @@ import Rejestracja from "./components/Logowanie/Rejestracja";
 import RouteNotFound from "./components/RouteNotFound";
 import RejestracjaConfirm from "./components/Logowanie/RejestracjaConfirm";
 import SnackAlert from "./SnackAlert";
+import Panel from "./components/Panel/Panel";
 const SERVER = "http://127.0.0.1:10005/";
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
   },
   { path: "/register", element: <Rejestracja /> },
   { path: "/accountConfirm/:base64", element: <RejestracjaConfirm /> },
+  { path: "/panel", element: <Panel /> },
   { path: "*", element: <RouteNotFound /> },
 ]);
 

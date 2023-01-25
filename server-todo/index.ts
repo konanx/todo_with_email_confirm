@@ -29,7 +29,17 @@ redisClient.connect();
 io.on("connection", (socket: any) => {
   log("SOCKET CLIENT CONNECTED");
   socket.on("loginAttempt", async (data: typeof LoginAttemptFromClientSide) => {
-    ProbaZalogowania({ login: "1", password: "password" });
+    let status = await ProbaZalogowania({
+      login: data.login,
+      password: data.password,
+    });
+    if (status.error) {
+      SnackAlert(status.error, "error");
+      return;
+    }
+    SnackAlert("Pomyślnie zalogowano", "success");
+    delete status.password;
+    socket.emit("udaneLogowanie", status);
   });
   socket.on(
     "registerAttempt",
