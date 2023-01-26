@@ -25,6 +25,7 @@ export const ProbaZalogowania = async (data: loginAttemptIE) => {
     }
     if (password != account.password) {
       resolve({ error: "Nieprawidłowe hasło" });
+
       return;
     }
     resolve(account);

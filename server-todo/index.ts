@@ -71,6 +71,12 @@ io.on("connection", (socket: any) => {
     }
   );
 
+  // TODO SOCKETS
+
+  socket.on("dodajNowaListe", (data: { id: number; name: string }) => {
+    const { id, name } = data;
+  });
+
   // WYSWIETLA ALERT NA FRONCIE
   const SnackAlert = (text: string, variant: VariantType) => {
     socket.emit("SnackAlert", { message: text, variant });
