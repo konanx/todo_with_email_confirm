@@ -9,6 +9,7 @@ import {
   RejestracjaConfirm,
 } from "./apka/Logowanie";
 import { registerAccountConfirmIE } from "./apka/LogowanieInterfaces";
+import { DodajListeTodo } from "./apka/ToDo/ToDo";
 
 const { LoginAttemptFromClientSide } = require("./app/interfaces.ts");
 const redis = require("redis");
@@ -73,8 +74,8 @@ io.on("connection", (socket: any) => {
 
   // TODO SOCKETS
 
-  socket.on("dodajNowaListe", (data: { id: number; name: string }) => {
-    const { id, name } = data;
+  socket.on("dodajNowaListe", async (data: { id: number; name: string }) => {
+    let la = await DodajListeTodo(data);
   });
 
   // WYSWIETLA ALERT NA FRONCIE
