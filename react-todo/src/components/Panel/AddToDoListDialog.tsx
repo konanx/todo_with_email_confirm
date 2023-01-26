@@ -10,15 +10,18 @@ import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { SocketContext } from "../contexts/Main";
 function AddToDoListDialog() {
-  const [socket] = useContext(SocketContext);
-  const nowaListaRef = useRef(null);
+  const [socket] = useContext<any>(SocketContext);
+  const [addName, setAddName] = useState("");
   const [open, setOpen] = useState(false);
 
   const DodajNowaListe = () => {
     let user: any = sessionStorage.getItem("auth");
-    user = JSON.parse(la);
+    user = JSON.parse(user);
     if (!user) return;
-    socket.emit("dodajNowaListe", { id: user.id, name: nowaListaRef.current });
+    socket.emit("dodajNowaListe", { person_id: user.id, name: addName });
+    let session: any = sessionStorage.getItem("auth");
+    session = JSON.parse(session);
+    socket.emit("pobierzListyToDo", session.id);
   };
 
   return (
@@ -50,7 +53,10 @@ function AddToDoListDialog() {
             type="text"
             fullWidth
             variant="standard"
-            ref={nowaListaRef}
+            value={addName}
+            onChange={(e) => {
+              setAddName(e.target.value);
+            }}
           />
         </DialogContent>
         <DialogActions>
@@ -61,7 +67,17 @@ function AddToDoListDialog() {
           >
             ANULUJ
           </Button>
-          <Button>DODAJ</Button>
+          <Button
+            onClick={() => {
+              console.log(addName);
+              if (addName) {
+                DodajNowaListe();
+                setOpen(false);
+              }
+            }}
+          >
+            DODAJ
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

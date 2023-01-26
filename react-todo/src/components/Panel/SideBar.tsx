@@ -15,12 +15,15 @@ import { SocketContext } from "../contexts/Main";
 import AddToDoListDialog from "./AddToDoListDialog";
 function SideBar() {
   const [listyTodo, setListyTodo] = useState([]);
-  const [socket] = useContext(SocketContext);
+  const [socket] = useContext<any>(SocketContext);
   useEffect(() => {
     if (socket) {
-      socket.emit("pobierzListyTodo");
-      socket.on("pobierzListyTodoResponse", (listy: any) => {
+      let session: any = sessionStorage.getItem("auth");
+      session = JSON.parse(session);
+      socket.emit("pobierzListyToDo", session.id);
+      socket.on("pobierzListyToDoResponse", (listy: any) => {
         setListyTodo(listy);
+        console.log(listy);
       });
     }
   }, [socket]);
@@ -42,8 +45,9 @@ function SideBar() {
           elevation={2}
           role="btn"
           sx={{ backgroundColor: "grey.900", p: 1 }}
+          key={index}
         >
-          <Typography variant="subtitle2">TEST</Typography>
+          <Typography variant="subtitle2">{item.name}</Typography>
         </Paper>
       ))}
       <Box sx={{ flexGrow: 1 }}></Box>
