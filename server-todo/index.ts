@@ -81,7 +81,7 @@ io.on("connection", (socket: any) => {
       SnackAlert("Dodano listę", "success");
     }
   );
-
+  // POBIERA LISTY NA FRONT
   socket.on("pobierzListyToDo", async (user_id: string) => {
     let listy = await PobierzListyTodo(user_id);
     socket.emit("pobierzListyToDoResponse", listy);
