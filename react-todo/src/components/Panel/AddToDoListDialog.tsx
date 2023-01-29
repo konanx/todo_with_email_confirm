@@ -19,19 +19,28 @@ function AddToDoListDialog() {
     user = JSON.parse(user);
     if (!user) return;
     socket.emit("dodajNowaListe", { person_id: user.id, name: addName });
-    let session: any = sessionStorage.getItem("auth");
-    session = JSON.parse(session);
-    socket.emit("pobierzListyToDo", session.id);
+    setAddName("");
   };
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("dodajNowaListeResponse", (data: any) => {
+        let session: any = sessionStorage.getItem("auth");
+        session = JSON.parse(session);
+        socket.emit("pobierzListyToDo", session.id);
+      });
+    }
+  }, [socket]);
 
   return (
     <div>
-      <IconButton aria-label="delete">
-        <AddIcon
-          onClick={() => {
-            setOpen(true);
-          }}
-        />
+      <IconButton
+        aria-label="delete"
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        <AddIcon />
       </IconButton>
       <Dialog
         open={open}
@@ -57,6 +66,14 @@ function AddToDoListDialog() {
             onChange={(e) => {
               setAddName(e.target.value);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                if (addName) {
+                  setOpen(() => false);
+                  DodajNowaListe();
+                }
+              }
+            }}
           />
         </DialogContent>
         <DialogActions>
@@ -69,7 +86,6 @@ function AddToDoListDialog() {
           </Button>
           <Button
             onClick={() => {
-              console.log(addName);
               if (addName) {
                 DodajNowaListe();
                 setOpen(false);

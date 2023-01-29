@@ -38,7 +38,11 @@ export const DodajListeTodo = (data: { person_id: number; name: string }) => {
       .lPush(redis_nazwa_uprawnienia_uzytkownika, redis_nazwa_lista)
       .incrBy("todoListCurrentId", 1)
       .exec();
-    console.log(transaction);
+    if (transaction) {
+      resolve(transaction);
+    } else {
+      resolve({ error: "Błąd DodajListeTodo" });
+    }
   });
 };
 

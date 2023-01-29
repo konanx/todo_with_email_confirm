@@ -79,6 +79,7 @@ io.on("connection", (socket: any) => {
     async (data: { person_id: number; name: string }) => {
       let la = await DodajListeTodo(data);
       SnackAlert("Dodano listę", "success");
+      socket.emit("dodajNowaListeResponse");
     }
   );
   // POBIERA LISTY NA FRONT
