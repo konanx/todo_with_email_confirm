@@ -9,7 +9,11 @@ import {
   RejestracjaConfirm,
 } from "./apka/Logowanie";
 import { registerAccountConfirmIE } from "./apka/LogowanieInterfaces";
-import { DodajListeTodo, PobierzListyTodo } from "./apka/ToDo/ToDo";
+import {
+  DodajListeTodo,
+  PobierzListyTodo,
+  PobierzZadaniaToDo,
+} from "./apka/ToDo/ToDo";
 
 const { LoginAttemptFromClientSide } = require("./app/interfaces.ts");
 const redis = require("redis");
@@ -86,6 +90,12 @@ io.on("connection", (socket: any) => {
   socket.on("pobierzListyToDo", async (user_id: string) => {
     let listy = await PobierzListyTodo(user_id);
     socket.emit("pobierzListyToDoResponse", listy);
+  });
+
+  socket.on("pobierzZadaniaToDo", async (lista_id: string) => {
+    let gotowe = await PobierzZadaniaToDo(lista_id);
+    SnackAlert("Wyświetlam wyniki dla wybranej listy", "success");
+    socket.emit("pobierzZadaniaToDoResponse", gotowe);
   });
 
   // WYSWIETLA ALERT NA FRONCIE

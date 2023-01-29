@@ -14,7 +14,17 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { SocketContext } from "../contexts/Main";
 import AddToDoListDialog from "./AddToDoListDialog";
 import Sheet from "@mui/joy/Sheet";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectTodoList,
+  selectTodoListisLoading,
+} from "../../features/selected/selectedTodoList";
+import type { RootState } from "../../app/store";
 function SideBar() {
+  const dispatch = useDispatch();
+  const wybranaLista = useSelector(
+    (state: RootState) => state.selectedTodoList.selected
+  );
   const [listyTodo, setListyTodo] = useState([]);
   const [socket] = useContext<any>(SocketContext);
   useEffect(() => {
@@ -28,7 +38,6 @@ function SideBar() {
       });
       socket.on("dodajNowaListeResponse", (data: any) => {
         let session: any = sessionStorage.getItem("auth");
-        console.log("grab");
         session = JSON.parse(session);
         socket.emit("pobierzListyToDo", session.id);
       });
@@ -41,6 +50,7 @@ function SideBar() {
         height: "100vh",
         maxHeight: "100vh",
         scrollbarColor: "#6b6b6b #2b2b2b",
+        backgroundColor: "darkgrey",
       }}
     >
       <Box
@@ -63,19 +73,24 @@ function SideBar() {
         }}
       >
         <Typography variant="caption">Twoje listy zadań:</Typography>
-        {listyTodo.map((item, index) => (
+        {listyTodo.map((item: any, index) => (
           <Paper
             elevation={2}
             role="btn"
             sx={{
-              backgroundColor: "grey.900",
+              backgroundColor: wybranaLista == item.id ? "#EFC050" : "grey.900",
               p: 1,
               cursor: "pointer",
               "&:hover": {
-                background: "#f00",
+                background: wybranaLista != item.id && "#45B8AC",
               },
             }}
-            key={index}
+            key={item.id}
+            onClick={() => {
+              dispatch(selectTodoListisLoading(true));
+              dispatch(selectTodoList(item.id));
+              socket.emit("pobierzZadaniaToDo", item.id);
+            }}
           >
             <Typography variant="subtitle2">{item.name}</Typography>
           </Paper>

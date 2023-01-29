@@ -46,6 +46,18 @@ export const DodajListeTodo = (data: { person_id: number; name: string }) => {
   });
 };
 
+export const PobierzZadaniaToDo = async (lista_id: string) => {
+  let tablica_zadan: any[] = [];
+  let redis_nazwa_listazadan = "zadania".concat(":", lista_id);
+  let lista_zadan = await redisClient.lRange(redis_nazwa_listazadan, 0, -1);
+  for (let i = 0; i < lista_zadan.length; i++) {
+    let redis_nazwa_zadania = "zadanie".concat(":", lista_zadan[i]);
+    let zadanie = JSON.parse(await redisClient.get(redis_nazwa_zadania));
+    tablica_zadan.push(zadanie);
+  }
+  return tablica_zadan;
+};
+
 export const PobierzTodoCurrentId = async () => {
   return new Promise<number>(async function (resolve, reject) {
     let current_id = await redisClient.get("todoListCurrentId");
