@@ -10,6 +10,8 @@ import RouteNotFound from "./components/RouteNotFound";
 import RejestracjaConfirm from "./components/Logowanie/RejestracjaConfirm";
 import SnackAlert from "./SnackAlert";
 import Panel from "./components/Panel/Panel";
+import { store } from "./app/store";
+import { Provider } from "react-redux";
 const SERVER = "http://127.0.0.1:10005/";
 const router = createBrowserRouter([
   {
@@ -34,8 +36,10 @@ function App() {
   return (
     <div className="App">
       <SocketContext.Provider value={[socket]}>
-        <RouterProvider router={router} errorElement={<Logowanie />} />
-        <SnackAlert />
+        <Provider store={store}>
+          <RouterProvider router={router} errorElement={<Logowanie />} />
+          <SnackAlert />
+        </Provider>
       </SocketContext.Provider>
     </div>
   );

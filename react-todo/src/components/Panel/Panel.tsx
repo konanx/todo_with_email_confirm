@@ -1,21 +1,27 @@
 import React, { useEffect } from "react";
 import SideBar from "./SideBar";
-import { CssBaseline } from "@mui/material";
+import { Box, CssBaseline } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ToDoList from "./ToDoList/ToDoList";
 function Panel() {
   const navigate = useNavigate();
   useEffect(() => {
     let la = sessionStorage.getItem("auth");
     console.log(la);
     if (!la) {
-      // navigate("../login");
+      navigate("../login");
     }
   }, []);
   return (
-    <>
-      <CssBaseline />
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
       <SideBar />
-    </>
+      <ToDoList />
+    </Box>
   );
 }
 

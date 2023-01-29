@@ -16,7 +16,7 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/joy": "^5.0.0-alpha.64",
     "@mui/material": "^5.11.0",
-    "@reduxjs/toolkit": "^1.9.1",
+    "@reduxjs/toolkit": "^1.9.2",
     "@types/md5": "^2.3.2",
     "bootstrap": "^5.2.3",
     "localforage": "^1.10.0",
