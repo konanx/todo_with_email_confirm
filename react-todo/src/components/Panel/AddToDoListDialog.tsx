@@ -6,7 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { IconButton } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { SocketContext } from "../contexts/Main";
 function AddToDoListDialog() {
@@ -41,7 +41,7 @@ function AddToDoListDialog() {
           setOpen(true);
         }}
       >
-        <AddIcon />
+        <Typography variant="subtitle2">Dodaj</Typography> <AddIcon />
       </IconButton>
       <Dialog
         open={open}

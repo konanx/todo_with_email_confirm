@@ -18,7 +18,7 @@ function ToDoList() {
         }}
       >
         <Typography variant="h3">
-          Wybierz liste aby wyświetlić szczegóły
+          Wybierz lub utwórz nową liste aby wyświetlić szczegóły
         </Typography>
       </Box>
     );

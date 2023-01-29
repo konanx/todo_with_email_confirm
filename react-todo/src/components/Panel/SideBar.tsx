@@ -87,6 +87,9 @@ function SideBar() {
           width: "100%",
           textAlign: "end",
           pr: 1,
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
         }}
       >
         <AddToDoListDialog />
