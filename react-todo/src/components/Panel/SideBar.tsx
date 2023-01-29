@@ -67,7 +67,14 @@ function SideBar() {
           <Paper
             elevation={2}
             role="btn"
-            sx={{ backgroundColor: "grey.900", p: 1 }}
+            sx={{
+              backgroundColor: "grey.900",
+              p: 1,
+              cursor: "pointer",
+              "&:hover": {
+                background: "#f00",
+              },
+            }}
             key={index}
           >
             <Typography variant="subtitle2">{item.name}</Typography>
