@@ -19,6 +19,7 @@ function AddToDoListDialog() {
     user = JSON.parse(user);
     if (!user) return;
     socket.emit("dodajNowaListe", { person_id: user.id, name: addName });
+    setOpen(false);
     setAddName("");
   };
 
@@ -69,7 +70,6 @@ function AddToDoListDialog() {
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 if (addName) {
-                  setOpen(() => false);
                   DodajNowaListe();
                 }
               }
@@ -88,7 +88,6 @@ function AddToDoListDialog() {
             onClick={() => {
               if (addName) {
                 DodajNowaListe();
-                setOpen(false);
               }
             }}
           >
