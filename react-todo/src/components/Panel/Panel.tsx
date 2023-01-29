@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import SideBar from "./SideBar";
 import { Box, CssBaseline } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ToDoList from "./ToDoList/ToDoList";
+import ToDoContainer from "./ToDoContainer/ToDoContainer";
 function Panel() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -20,7 +20,7 @@ function Panel() {
       }}
     >
       <SideBar />
-      <ToDoList />
+      <ToDoContainer />
     </Box>
   );
 }
