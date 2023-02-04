@@ -13,6 +13,8 @@ import { SocketContext } from "../../contexts/Main";
 import { Socket } from "socket.io";
 import { selectTodoListisLoading } from "../../../features/selected/selectedTodoList";
 import { TextField } from "@mui/joy";
+import LoadingAnimation from "./LoadingAnimation";
+import NoListSelected from "./NoListSelected";
 
 function ToDoContainer() {
   const dispatch = useDispatch();
@@ -34,39 +36,8 @@ function ToDoContainer() {
     }
   }, [socket]);
 
-  if (!currentTodoList)
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          height: "100vh",
-          p: 3,
-          pt: 15,
-          background: "darkgreen",
-        }}
-      >
-        <Typography variant="h3">
-          Wybierz lub utwórz nową liste aby wyświetlić szczegóły
-        </Typography>
-      </Box>
-    );
-  if (isLoading)
-    return (
-      <Container
-        sx={{
-          width: "100%",
-          height: "100vh",
-          p: 3,
-          pt: 15,
-          textAlign: "center",
-        }}
-      >
-        <Skeleton />
-        <Skeleton animation="wave" />
-        <Skeleton animation={false} />
-        <Typography variant="h6">Ładowanie...</Typography>
-      </Container>
-    );
+  if (!currentTodoList) return <NoListSelected />;
+  if (isLoading) return <LoadingAnimation />;
   return (
     <Box
       sx={{
