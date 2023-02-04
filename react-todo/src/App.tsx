@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from "react";
+import "regenerator-runtime/runtime";
 import { RouterProvider } from "react-router";
 import Root from "./routes/root";
 import { createBrowserRouter } from "react-router-dom";

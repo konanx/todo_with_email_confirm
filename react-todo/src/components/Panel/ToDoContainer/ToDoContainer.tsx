@@ -15,6 +15,7 @@ import { selectTodoListisLoading } from "../../../features/selected/selectedTodo
 import { TextField } from "@mui/joy";
 import LoadingAnimation from "./LoadingAnimation";
 import NoListSelected from "./NoListSelected";
+import AddNewTask from "./AddNewTask";
 
 function ToDoContainer() {
   const dispatch = useDispatch();
@@ -61,8 +62,7 @@ function ToDoContainer() {
         )}
       </Box>
       <Box sx={{ display: "flex", gap: 2 }}>
-        <Input sx={{ width: 200 }} />
-        <Button>Dodaj</Button>
+        <AddNewTask />
       </Box>
     </Box>
   );
