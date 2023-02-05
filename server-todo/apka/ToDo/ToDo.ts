@@ -64,3 +64,4 @@ export const PobierzTodoCurrentId = async () => {
     resolve(parseInt(current_id));
   });
 };
+// MASTER
