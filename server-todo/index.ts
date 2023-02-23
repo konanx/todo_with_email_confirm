@@ -11,6 +11,7 @@ import {
 import { registerAccountConfirmIE } from "./apka/LogowanieInterfaces";
 import {
   DodajListeTodo,
+  DodajNoweZadanieTodo,
   PobierzListyTodo,
   PobierzZadaniaToDo,
 } from "./apka/ToDo/ToDo";
@@ -96,6 +97,11 @@ io.on("connection", (socket: any) => {
     let gotowe = await PobierzZadaniaToDo(lista_id);
     SnackAlert("Wyświetlam wyniki dla wybranej listy", "success");
     socket.emit("pobierzZadaniaToDoResponse", gotowe);
+  });
+
+  socket.on("addNewTask", async (data: any) => {
+    let response = await DodajNoweZadanieTodo("dasads");
+    console.log(response);
   });
 
   // WYSWIETLA ALERT NA FRONCIE

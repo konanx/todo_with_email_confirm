@@ -45,7 +45,33 @@ export const DodajListeTodo = (data: { person_id: number; name: string }) => {
     }
   });
 };
+export const DodajNoweZadanieTodo = async (data: any) => {
+  let timestamp: number = new Date().getTime();
 
+  // NAZWY REDIS
+  let taskId = (await redisClient.get("currentTaskId")) + 1;
+  let lista_taskow = "taskiListy".concat(data.listId);
+  let nazwa_taska = "task".concat(":", taskId);
+  let task = {
+    id: taskId,
+    name: data.name,
+    done: false,
+    created_timestamp: timestamp,
+    end_timestamp: null,
+    deadline_timestamp: data.deadline_timestamp || null,
+    priority: 0,
+    mark: false,
+  };
+
+  let transaction = await redisClient
+    .multi()
+    .lpush(lista_taskow, taskId)
+    .set(nazwa_taska, JSON.stringify(task))
+    .incrBy("currentTaskId", 1)
+    .exec();
+  console.log(transaction);
+  return { status: "success", message: "Dodano taska :)" };
+};
 export const PobierzZadaniaToDo = async (lista_id: string) => {
   let tablica_zadan: any[] = [];
   let redis_nazwa_listazadan = "zadania".concat(":", lista_id);
