@@ -49,9 +49,11 @@ export const DodajNoweZadanieTodo = async (data: any) => {
   let timestamp: number = new Date().getTime();
 
   // NAZWY REDIS
-  let taskId = (await redisClient.get("currentTaskId")) + 1;
+  let taskId = (
+    parseInt(await redisClient.get("currentTaskId")) + 1
+  ).toString();
   let lista_taskow = "taskiListy".concat(data.listId);
-  let nazwa_taska = "task".concat(":", taskId);
+  let nazwa_taska = "zadanie".concat(":", taskId);
   let task = {
     id: taskId,
     name: data.name,
@@ -65,9 +67,10 @@ export const DodajNoweZadanieTodo = async (data: any) => {
 
   let transaction = await redisClient
     .multi()
-    .lpush(lista_taskow, taskId)
+    .lPush(lista_taskow, taskId)
     .set(nazwa_taska, JSON.stringify(task))
     .incrBy("currentTaskId", 1)
+    .lPush(`zadania:${data.listId}`, `zadanie:${taskId}`)
     .exec();
   console.log(transaction);
   return { status: "success", message: "Dodano taska :)" };
@@ -77,10 +80,11 @@ export const PobierzZadaniaToDo = async (lista_id: string) => {
   let redis_nazwa_listazadan = "zadania".concat(":", lista_id);
   let lista_zadan = await redisClient.lRange(redis_nazwa_listazadan, 0, -1);
   for (let i = 0; i < lista_zadan.length; i++) {
-    let redis_nazwa_zadania = "zadanie".concat(":", lista_zadan[i]);
-    let zadanie = JSON.parse(await redisClient.get(redis_nazwa_zadania));
+    console.log(lista_zadan[i]);
+    let zadanie = JSON.parse(await redisClient.get(lista_zadan[i]));
     tablica_zadan.push(zadanie);
   }
+  console.log(tablica_zadan);
   return tablica_zadan;
 };
 

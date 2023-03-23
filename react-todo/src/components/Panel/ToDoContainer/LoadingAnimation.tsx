@@ -1,21 +1,27 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Skeleton } from "@mui/material";
 import React from "react";
 
 function LoadingAnimation() {
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "100vh",
-        p: 3,
-        pt: 15,
-        background: "darkgreen",
-      }}
-    >
-      <Typography variant="h3">
-        Wybierz lub utwórz nową liste aby wyświetlić szczegóły
-      </Typography>
-    </Box>
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          width: "100%",
+          mt: 5,
+          textAlign: "center",
+        }}
+      >
+        <Box className="" sx={{ width: "60%" }}>
+          <Skeleton />
+          <Skeleton animation="wave" />
+          <Skeleton animation={false} />
+          <Typography>Ładowanie...</Typography>
+        </Box>
+      </Box>
+    </>
   );
 }
 

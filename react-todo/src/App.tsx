@@ -13,6 +13,7 @@ import SnackAlert from "./SnackAlert";
 import Panel from "./components/Panel/Panel";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
+import ServerOffline from "./ServerOffline";
 const SERVER = "http://127.0.0.1:10005/";
 const router = createBrowserRouter([
   {
@@ -39,6 +40,7 @@ function App() {
       <SocketContext.Provider value={[socket]}>
         <Provider store={store}>
           <RouterProvider router={router} errorElement={<Logowanie />} />
+          <ServerOffline />
           <SnackAlert />
         </Provider>
       </SocketContext.Provider>

@@ -94,14 +94,21 @@ io.on("connection", (socket: any) => {
   });
 
   socket.on("pobierzZadaniaToDo", async (lista_id: string) => {
+    socket.join(`lista:${lista_id}`);
     let gotowe = await PobierzZadaniaToDo(lista_id);
     SnackAlert("Wyświetlam wyniki dla wybranej listy", "success");
     socket.emit("pobierzZadaniaToDoResponse", gotowe);
   });
 
   socket.on("addNewTask", async (data: any) => {
-    let response = await DodajNoweZadanieTodo("dasads");
+    let response: any = await DodajNoweZadanieTodo(data);
     console.log(response);
+    SnackAlert(response.message, response.status);
+    socket.emit("addNewTaskResponse");
+
+    // WYSYŁAMY AKTUALNA LISTE NA FRONTA
+    let gotowe = await PobierzZadaniaToDo(data.listId);
+    io.to(`lista:${data.listId}`).emit("pobierzZadaniaToDoResponse", gotowe);
   });
 
   // WYSWIETLA ALERT NA FRONCIE

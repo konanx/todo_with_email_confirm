@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 import { SocketContext } from "../../contexts/Main";
 import { Socket } from "socket.io";
-import { selectTodoListisLoading } from "../../../features/selected/selectedTodoList";
+import { selectTodoListisLoading } from "../../../features/selected/selectedTodoListSlice";
 import { TextField } from "@mui/joy";
 import LoadingAnimation from "./LoadingAnimation";
 import NoListSelected from "./NoListSelected";
 import AddNewTask from "./AddNewTask";
+import Task from "./Task";
 
 function ToDoContainer() {
   const dispatch = useDispatch();
@@ -31,7 +32,8 @@ function ToDoContainer() {
   useEffect(() => {
     if (socket) {
       socket.on("pobierzZadaniaToDoResponse", (lista: any) => {
-        setTodoLista(lista);
+        let sorted = lista.sort((a, b) => (a.id > b.id ? 1 : -1));
+        setTodoLista(sorted);
         dispatch(selectTodoListisLoading(false));
       });
     }
@@ -50,18 +52,34 @@ function ToDoContainer() {
         alignItems: "center",
       }}
     >
-      <Box sx={{ width: "100%", height: "80vh", textAlign: "center" }}>
-        {!todoLista.length ? (
-          <Typography sx={{ mt: 3 }} variant="h5">
-            Brak zadań do wykonania
-          </Typography>
-        ) : (
-          todoLista.map((item: any, index: any) => {
-            return <div>TEST</div>;
-          })
-        )}
+      <Box
+        sx={{
+          width: "100%",
+          height: "80vh",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            width: "60%",
+            overflow: "auto",
+            "&::-webkit-scrollbar": { height: 10, WebkitAppearance: "none" },
+          }}
+        >
+          {!todoLista.length ? (
+            <Typography sx={{ mt: 3, textAlign: "center" }} variant="h5">
+              Brak zadań do wykonania
+            </Typography>
+          ) : (
+            todoLista.map((item: any, index: any) => {
+              console.log(item);
+              return <Task {...item} key={index} />;
+            })
+          )}
+        </Box>
       </Box>
-      <Box sx={{ display: "flex", gap: 2 }}>
+      <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
         <AddNewTask />
       </Box>
     </Box>

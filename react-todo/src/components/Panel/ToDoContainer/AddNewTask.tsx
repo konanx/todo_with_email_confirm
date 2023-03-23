@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../app/store";
 const { Search } = Input;
 const suffix = (
-  <div className="" onClick={SpeechRecognition.startListening}>
+  <div className="" onClick={SpeechRecognition.startListening as any}>
     <AudioOutlined
       style={{
         fontSize: 16,
@@ -36,7 +36,6 @@ const AddNewTask = () => {
   const listId = useSelector(
     (state: RootState) => state.selectedTodoList.selected
   );
-  console.log(listId);
   const [newTask, setNewTask] = useState<any>();
   const {
     transcript,
@@ -61,6 +60,7 @@ const AddNewTask = () => {
       listId: listId,
     };
     socket.emit("addNewTask", NewTask);
+    setNewTask("");
   };
   return (
     <div>
