@@ -13,10 +13,10 @@ import { SocketContext } from "../../contexts/Main";
 import { Socket } from "socket.io";
 import { selectTodoListisLoading } from "../../../features/selected/selectedTodoListSlice";
 import { TextField } from "@mui/joy";
-import LoadingAnimation from "./LoadingAnimation";
-import NoListSelected from "./NoListSelected";
+import LoadingAnimation from "./Utility/LoadingAnimation";
+import NoListSelected from "./Utility/NoListSelected";
 import AddNewTask from "./AddNewTask";
-import Task from "./Task";
+import Task from "./Task/Task";
 
 function ToDoContainer() {
   const dispatch = useDispatch();
